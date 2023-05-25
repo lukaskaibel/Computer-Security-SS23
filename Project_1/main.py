@@ -5,11 +5,13 @@ import secrets
 import sys
 import base64
 import os
+from typing import Tuple
 
 ciphertext_path = "Ciphertext"
 plaintext_path = "plaintext"
 
-def generate_keys() -> (int, int):
+
+def generate_keys() -> Tuple[int, int]:
     # Generate a random 16-bit key
     k_0 = secrets.randbits(16)
 
@@ -55,7 +57,7 @@ def otp_decode(data: bytes, key: bytes):
     assert len(key) == 128
     assert len(data) == 128
     result = [a ^ b for a, b in itertools.zip_longest(key, data)]
-    stripped = bytes(itertools.takewhile(lambda b: b!=0, result))
+    stripped = bytes(itertools.takewhile(lambda b: b != 0, result))
     return stripped
 
 
@@ -64,6 +66,7 @@ def write_text_file(filename: str, file_data: bytes):
     # Open the file in write text mode.
     with open(filename, "w") as file:
         file.write(file_data.decode("ascii"))
+
 
 # Read and encode a txt file.
 def read_text_file(filename: str) -> bytes:
@@ -77,6 +80,7 @@ def read_text_file(filename: str) -> bytes:
     else:
         raise ValueError("Non-ASCII characters found in the input file.")
 
+
 # Read n files from path {path}-{n}.txt
 def read_n_texts(path: str, n: int) -> list:
     l = [0 for i in range(0, n)]
@@ -85,6 +89,7 @@ def read_n_texts(path: str, n: int) -> list:
         l[i] = read_text_file(filename)
     return l
 
+
 # Shuffle the ciphertexts and write each to a separate file.
 def write_ciphers_files(cts: list):
     random.shuffle(cts)
@@ -92,6 +97,7 @@ def write_ciphers_files(cts: list):
         ct = cts[i]
         filename = "{p}-{n}.txt".format(p=ciphertext_path, n=i + 1)
         write_text_file(filename, ct)
+
 
 # Write all keys to a single file.
 def write_keys_file(keys: list):
@@ -116,7 +122,6 @@ if __name__ == "__main__":
     ciphertexts = ciphertexts1 + ciphertexts2 + ciphertexts3
     write_ciphers_files(ciphertexts)
 
-    
     # Sanity checks
 
     # Check that we read the same ciphertext bytes as we wrote (in different order).
@@ -138,7 +143,3 @@ if __name__ == "__main__":
             if k == keys[-1]:
                 # no matching key found
                 raise Exception("Decryption of a ciphertext3 failed!")
-
-
-
-    
