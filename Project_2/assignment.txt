@@ -1,0 +1,55 @@
+--------Project 2--------
+19.99 points + Bonus
+
+In what follows, BOF = Buffer Overflow(s). You will perform experiments with BOF on the supplied VM with the safeguards enabled (unless stated otherwise) and demonstrate your results.
+
+Submission deadline is 21.06. Submission details will be announced soon.
+
+**********
+For the following tasks, submit: your arguments in a perl script, explanation and readme.
+- prog1.c 
+Enter argument(s) to overflow the (static) buffer, such that the output(s) are:-
+
+val1 = 1818390343, val2 = 1917480553
+val1 = 1852731207, val2 = 2037531489
+val1 = 1163282759, val2 = 1414415698
+val1 = 1684631635, val2 = 1634562661
+Does this work without the flags enabled? Why or why not?
+
+- prog2.c 
+supply command line arguments such that the program crashes.
+what is the smallest such argument and why does a segfault occur?
+
+- prog3.c is like the authentication program from the book.
+supply an argument so that output should be:
+
+Access granted. Gonna cry?
+You should have thought of that earlier.
+
+***********
+For the following tasks, submit: code, arguments, readme, explanation for each. 
+
+- Write a harmless minimal C program (named hello.c) with a BOF vulnerability.
+Create shellcode to print "hello world", inject it and smash the stack.
+
+- Write a harmless minimal C program (named shellcode.c) with a BOF vulnerability.
+Create shellcode to spawn a shell, inject it and smash the stack.
+
+- Redo the above (shellcode-2.c) with shellcode injection above rip.
+
+- Write a harmless minimal C program (fibohack.c) with a BOF vulnerability.
+Create shellcode to compute the 10th hemachandra/fibonacci number. Write a program that takes as input some integer i and generates shellcode to compute the i-th number. The emitted shellcode should work with the vulnerable program.
+
+- Write a  harmless minimal C program (offbyone.c) with an off-by-one error (the example in the paper maybe helpful).
+Create shellcode to smash the stack (any control flow hijack would be fine).
+
+***********
+Bonus:
+- (sudo) redo the shell spawning with a program with setuid flag enabled. The shellcode should spawn a root shell, when run as a normal user.
+
+- Redo the above with ASLR enabled.
+
+- (return-to-libc) Redo the question for prog3.c, but instead of calling the smashed() function, supply an argument that performs a return-to-libc attack and prints the output.
+Your program should be compiled without the execstack flag.
+
+
