@@ -1,7 +1,9 @@
 # Computer Security Project 2
 
 ### prog1.c
+
 How to overflow, to create expected outputs:
+
 - The program reads a string from the program arguments
 - The string gets saved in a 8 bytes long buffer using the strcpy
 - the problem is, that strcpy does not check the bounds of the argument
@@ -14,6 +16,7 @@ For that we simply interpreted the ints as strings. As results, we got some nice
 
 Finally, to achieve the overflow, we used
 ./prog1 "AAAAAAAAGoblinJr"
+
 - As you can see: 8xA to fill up the buffer, followed by 2x4 chars, to override the two 4 bytes ints
 
 Analogue, for the other ints as well. Solutions:
@@ -26,17 +29,18 @@ Does it work without flags enabled? Yes!
 -z execstack
 -> No difference, nothing is executed on stack anyways.
 -fno-stack-protector
--> Interestingly, no canaries are modified. Probably because of simplicity of this approach. So it makes no difference. 
+-> Interestingly, no canaries are modified. Probably because of simplicity of this approach. So it makes no difference.
 
 ### prog2.c
-A segmentation fault in C is thrown, when a program attempts to read or write to a memory location that has not been allocated to it. 
+
+A segmentation fault in C is thrown, when a program attempts to read or write to a memory location that has not been allocated to it.
 [datatrained.com/post/segmentation-fault-in-c/]
 For this program a segfault is called when no arguments are passed to the program.
-The reason is that argv[1] gets called in strcpy(), when no argument is passed. 
+The reason is that argv[1] gets called in strcpy(), when no argument is passed.
 We can bypass this by entering a string as first argument.
 If the string is <= 9 chars, "[arg1] his lazy" gets printed
 E.g.:
-└─$ ./prog2 "123456789"      
+└─$ ./prog2 "123456789"  
 SEGFAULT incoming
 123456789 is lazy
 
@@ -64,3 +68,10 @@ Access granted. Gonna cry?
 You should have thought of that earlier.
 
 ```
+
+### offbyone.c
+
+The off by one error occurs because in the `func` function the input is copied into the buffer of size 256. However the loop iterates over 266, as `0 <= i <= 256`. The correct implementation of `func` should be `0 <= i < 256`.
+Thats why the error is called off by one, as the programmer miscounted the amounts the loop will iterate, creating an error that iterates exactly once too often.
+
+In order to exploit this with a stack smash we can create a perl script like `offbyone_stacksmash.pl` which when executed creates an input for `offbyone.c` with 257 A's, causing the buffer to overflow.
