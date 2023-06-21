@@ -6,7 +6,7 @@
 - bash shell to run the shell scripts
 - perl to execute the Perl scripts
 
-## How to Run Programs
+## How to Run the BOF attacks
 
 ### prog1.c
 
@@ -16,10 +16,10 @@
 gcc -o prog1 prog1.c
 ```
 
-2. Run the program with the following command, replacing "StringToOverflow" with the string you want to use to create the overflow.
+2. Run the bash script provided:
 
 ```bash
-./prog1 "StringToOverflow"
+./prog1.sh
 ```
 
 ### prog2.c
@@ -30,10 +30,10 @@ gcc -o prog1 prog1.c
 gcc -o prog2 prog2.c
 ```
 
-2. Run the program with the following command, replacing "StringArgument" with your own string argument.
+2. Run the bash script provided:
 
 ```bash
-./prog2 "StringArgument"
+./prog2.sh
 ```
 
 ### prog3.c
@@ -58,7 +58,7 @@ gcc -o prog3 prog3.c
 gcc -o offbyone offbyone.c
 ```
 
-2. Execute the Perl script to create the input for offbyone.c
+2. Execute the perl script:
 
 ```bash
 perl offbyone_stacksmash.pl
