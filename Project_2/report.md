@@ -1,4 +1,4 @@
-# Report_prog1.txt
+# Report prog1.c
 
 ## Problem
 
@@ -27,7 +27,7 @@ Interestingly, despite enabling flags like `-z execstack` and `-fno-stack-protec
 
 ---
 
-# Report_prog2.txt
+# Report prog2.c
 
 ## Problem
 
@@ -49,7 +49,7 @@ This solution and the resulting output shed light on how `strcpy` function behav
 
 ---
 
-# Report_prog3.txt
+# Report prog3.c
 
 ## Problem
 
@@ -71,7 +71,7 @@ This experiment demonstrates the potential security risks that come with buffer 
 
 ---
 
-# Report_offbyone.txt
+# Report offbyone.c
 
 ## Problem
 
