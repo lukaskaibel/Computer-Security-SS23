@@ -1,77 +1,71 @@
-# Computer Security Project 2
+# README.md
+
+## Requirements
+
+- gcc compiler to compile the C programs
+- bash shell to run the shell scripts
+- perl to execute the Perl scripts
+
+## How to Run Programs
 
 ### prog1.c
 
-How to overflow, to create expected outputs:
+1. Compile the program by running the command:
 
-- The program reads a string from the program arguments
-- The string gets saved in a 8 bytes long buffer using the strcpy
-- the problem is, that strcpy does not check the bounds of the argument
-- That means, that longer strings also get copied in the buffer and thus, other variables may get overriden.
-- This is exactly the case, as int val1 and int val2 are declared below the buffer
-- As the local vars are saved on the stack and the stack grows downwards, the ints get overriden if we input a string > 8 bytes (characters)
+```bash
+gcc -o prog1 prog1.c
+```
 
-So to achieve the expected outputs we just had to experiment, which strings get interpreted as the required ints.
-For that we simply interpreted the ints as strings. As results, we got some nice strings:
+2. Run the program with the following command, replacing "StringToOverflow" with the string you want to use to create the overflow.
 
-Finally, to achieve the overflow, we used
-./prog1 "AAAAAAAAGoblinJr"
-
-- As you can see: 8xA to fill up the buffer, followed by 2x4 chars, to override the two 4 bytes ints
-
-Analogue, for the other ints as well. Solutions:
-GoblinJr
-GonnaCry
-GIVERENT
-Spiderma
-
-Does it work without flags enabled? Yes!
--z execstack
--> No difference, nothing is executed on stack anyways.
--fno-stack-protector
--> Interestingly, no canaries are modified. Probably because of simplicity of this approach. So it makes no difference.
+```bash
+./prog1 "StringToOverflow"
+```
 
 ### prog2.c
 
-A segmentation fault in C is thrown, when a program attempts to read or write to a memory location that has not been allocated to it.
-[datatrained.com/post/segmentation-fault-in-c/]
-For this program a segfault is called when no arguments are passed to the program.
-The reason is that argv[1] gets called in strcpy(), when no argument is passed.
-We can bypass this by entering a string as first argument.
-If the string is <= 9 chars, "[arg1] his lazy" gets printed
-E.g.:
-└─$ ./prog2 "123456789"  
-SEGFAULT incoming
-123456789 is lazy
+1. Compile the program by running the command:
 
-If the string is > 9 chars, it overrides the string task, which leads to the argument being printed twice. (Expect the first 10 chars of it.)
-E.g.:
-└─$ ./prog2 "1234567890HALLO"
-SEGFAULT incoming
-1234567890HALLO HALLO
+```bash
+gcc -o prog2 prog2.c
+```
+
+2. Run the program with the following command, replacing "StringArgument" with your own string argument.
+
+```bash
+./prog2 "StringArgument"
+```
 
 ### prog3.c
 
-Jump to the address of the `smash` function by overwriting the return address in the stack:
+1. Compile the program by running the command:
 
-```sh
-#! /bin/bash
+```bash
 gcc -o prog3 prog3.c
-./prog3 "thisisjustaninnocentbufferhihi:)@"
 ```
 
-It can be tested with the provided script `prog3_smash.sh`:
+2. Run the bash script provided:
 
-```sh
-$ ./prog3_smash.sh
-Access granted. Gonna cry?
-You should have thought of that earlier.
-
+```bash
+./prog3_smash.sh
 ```
 
 ### offbyone.c
 
-The off by one error occurs because in the `func` function the input is copied into the buffer of size 256. However the loop iterates over 266, as `0 <= i <= 256`. The correct implementation of `func` should be `0 <= i < 256`.
-Thats why the error is called off by one, as the programmer miscounted the amounts the loop will iterate, creating an error that iterates exactly once too often.
+1. Compile the program by running the command:
 
-In order to exploit this with a stack smash we can create a perl script like `offbyone_stacksmash.pl` which when executed creates an input for `offbyone.c` with 257 A's, causing the buffer to overflow.
+```bash
+gcc -o offbyone offbyone.c
+```
+
+2. Execute the Perl script to create the input for offbyone.c
+
+```bash
+perl offbyone_stacksmash.pl
+```
+
+## Structure/Dependencies
+
+Each folder contains a C source code file (.c) with a corresponding program name (e.g., `prog1.c`). The C programs demonstrate various programming pitfalls that can lead to security vulnerabilities.
+
+Also included are shell scripts (e.g., `prog3_smash.sh`) or Perl scripts (e.g., `offbyone_stacksmash.pl`) which are used to exploit these vulnerabilities.
