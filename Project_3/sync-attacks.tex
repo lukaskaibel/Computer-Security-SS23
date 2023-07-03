@@ -1,0 +1,23 @@
+\section{Synchronous Known-Data Attacks}
+
+Synchronous attacks are applicable if the plaintext or cipherntext is known. The main assumption is that the attacker operates synchronously with the encryption on the same processor. Therefore, the attacker has to know when some encryption starts. This is a realistic assumption, as you can see in the following example. 
+A virtual device provides encrypted storage to the physical device, having a normal filesystem mounted on top. A user being able to write on any file might now trigger an encryption on a chosen plaintext. Using the presented attack the attacker is able to recover the key used for encryption. 
+
+\paragraph{}
+\textbf{One-Round Attack:} The simplest synchronous attack exploits the fact, that given knowledge of a plaintext byte, information about the accessed index exposes information about the key at this position. The main idea basically is the following. The attacker collects measurements related to the encryption. These contain information whether specific memory blocks are accessed during the encryption process. By comparing the samples with ideal predictions, the attacker can filter out noise and may also make educated guesses about parts of the encryption key. To estimate the likelihood of a specific key being correct, the candidate score gets introduced. It is higher when the measurement scores align with the expected behavior of memory block accesses. 
+However, even though the One-Round Attack demonstrates its effectiveness in revealing the top four bits, it is limited by the need for statistical analysis and the reliance on specific conditions and measurement.
+
+
+\textbf{Two-Rounds Attack:}
+In comparison two the one-round attack, the two round attack analyzes also the second round of AES encryption. This especially includes the non-linear mixing of the Rijndael cipher to narrow down the possible values of key bytes. 
+An ideal predicate is used as a condition that represents the expected behavior in an ideal scenario. With partial knowledge of the key bytes from round one, the unknown low bits of certain key bytes in the second round affect only the low bits of a specific intermediate value. By enumerating candidate values, the correct candidate can be identified.
+
+\textbf{Measurement via Evict+Time:}
+In genereal for Evict and Time, the attacker evicts memory from the cache using an evictions set. If the victim accesses the shared memory, it overwrites the cache. Finally the attacker accesses the shared memory. If the access is quick, it has been accessed in between by the victim. Otherwise it has not. In the case of AES encryption the timing differences are observed during the encryption process. This reveals information about specific table indices being accessed or not. The information is later used for the extraction of measurement scores, which is essential to the recovery of the encryption key.
+
+\textbf{Measurement via Prime+Probe:}
+Prime and Probe is also a common building block for side channel attacks. The attacker flushes monitored cache lines (using clflush on x86) and waits for the victim to execute its code. The attacker then measures the access time to some cache lines, to decide whether the victim has accessed the cache lines. The timing is done using clock cycle counter rdtsc. Here the cache is also primed by reading values from all memory blocks. After triggering an encryption of a chosen plaintext the chache is probed to check for cache misses in different cache sets. This way the attacker can infer which memory blocks have been accessed during encryption. In comparison to Evict+Time, the method is less error-prone as it is less sensitive to timing variations.
+
+
+\paragraph{}
+The One-Round Round Attack, the Two-Round Attack, Evict+Time and Prime+Probe can be used together, as part of a bigger attack. Combined, they further refine the key byte candidates, which provides a more effective and efficient key recovery. 
