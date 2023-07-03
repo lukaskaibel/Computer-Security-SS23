@@ -1,0 +1,17 @@
+Synchronous attacks require that the attacker can interact with the encryption code.
+For asynchronous attack this is not necessary: a process doesn't have to interact with encryption program and can still obtain information simply by running on the same CPU.
+
+It is assumed that multithreading is supported and that the attacker process runs in parallel with the victim.
+The attacker can analyze the frequency score of the victims memory accesses, i.e. how often it accesses a memory location.
+The preliminary is that the attacker's and the victim's used memory blocks map to the same cache lines.
+The attacker measures the time it takes to retrieve memory blocks when it runs alone, vs when it runs in parallel with the victim.
+Depending on how often the victim access its memory blocks, the attacker's process gets cache misses when loading its blocks, which shows through an increased access time.
+By measuring over a larger number of access, the frequency score for the victim can be obtained.
+
+This frequency score for each AES Lookup Table can be used together with the frequency information about the encrypted text (e.g. that if it's an english text, it is very likely that a bytes has there highest nibble set to 6, which represent a letter between 'a' and 'p') to obtain information about the highest nibble in some key bytes.
+The paper described that through this method, ~45.66 bits of the secret key could be obtained.
+
+It also proposes that if additionally the order of accesses could be analyzed by the attacker, even more bits can be obtained
+Furthermore, it describes an way to remove the limitation that the host system must be multithreaded: by exploiting interrupt mechanism an attacker can pause the encryption process and analyze the state of the cache (again through loading memory blocks and measuring cache misses) again as discussed.
+For processors with multiple layers of caching i.e. where L1 caches are private to a core, the paper claims that the attacks may still be possible if the cryptographic code to L2 / L3 caches that are shared among cores.
+

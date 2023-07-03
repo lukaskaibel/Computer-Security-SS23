@@ -1,0 +1,14 @@
+The paper discusses cache attacks as a type of side-channel attacks that leverage cross-process information leaking through CPU caches.
+
+The attacks are possible due to how \textit{set-associative memory caches} are implemented.
+Their structure limits the mapping of memory addresses to the cache in the sense a) always full memory blocks are cached, and b) that a memory block can only be cached in specific cache lines.
+
+The attacked cipher is the AES cipher, where the attacks leverages how it is implemented in performance-oriented software.
+Concrete, the implementation pre-computes Lookup-tables. These tables are then used to realize the algebraic Shift-Rows, Mix-Columns and Sub-Bytes operations needed in each round of the AES computation.
+
+The paper describes multiple attacks where a process can obtain information about another process' memory access patterns by leveraging said implementation details of the the memory caches and AES implementation.
+Finally, the paper also discusses countermeasures for such attacks.
+
+
+
+
